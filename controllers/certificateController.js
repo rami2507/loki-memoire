@@ -24,8 +24,6 @@ exports.createCertificate = async (req, res, next) => {
 
     imagePath = imagePath.slice(8);
 
-    console.log(imagePath);
-
     const certificate = new Certificate({
       student,
       image: imagePath,
