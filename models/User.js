@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
   group: String,
   teachingModules: [{ type: mongoose.Schema.Types.ObjectId, ref: "Module" }],
   enrolledModules: [{ type: mongoose.Schema.Types.ObjectId, ref: "Module" }],
+  averageMark: Number,
 });
 
 const User = mongoose.model("User", userSchema);

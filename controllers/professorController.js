@@ -8,7 +8,7 @@ exports.assignModuleToProfessor = async (req, res) => {
   try {
     const professorId = req.user._id.valueOf();
     const { moduleId } = req.body;
-    const professor = await Professor.findById(professorId);
+    const professor = await User.findById(professorId);
     if (!professor || professor.role !== "professor") {
       return res.status(404).json({ message: "Professor not found" });
     }
@@ -25,6 +25,7 @@ exports.assignModuleToProfessor = async (req, res) => {
       .status(200)
       .json({ message: "Module assigned to professor successfully", module });
   } catch (error) {
+    console.log(error);
     res
       .status(500)
       .json({ message: "Error assigning module to professor", error });
@@ -52,6 +53,14 @@ exports.assignMarkToStudent = async (req, res) => {
     }
     const { markType } = req.body;
     if (professor.teachingModules.includes(moduleId)) {
+      const hasMark = await Mark.findOne({ studentId, moduleId });
+      if (hasMark) {
+        if (hasMark.markType === markType) {
+          return res
+            .status(400)
+            .json({ message: "Mark already assigned to this student" });
+        }
+      }
       const createdMark = await Mark.create({
         studentId,
         moduleId,
